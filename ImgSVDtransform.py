@@ -1,6 +1,5 @@
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.image as mping
+from cv2 import cv2
 
 #对图片进行svd分解，返回3个色彩通道的U,S,D矩阵值
 def image_svd_decompose(img):
@@ -36,9 +35,15 @@ def image_svd_transform(img, m, n):
 
 if __name__ == '__main__':
     img_path = input("请输入图片路径: ")
-    img = mping.imread(img_path)
+    img = cv2.imread(img_path, cv2.IMREAD_COLOR)
     max = min(img.shape[0], img.shape[1])
     n = int(input("输入奇异值项数(1~%d): "%(max)))
-    pic = image_svd_transform(img, 0, n)
-    plt.imshow(pic)
-    plt.show()
+    img_svd = image_svd_transform(img, 0, n)
+    cv2.imshow("image after SVD transformation", img_svd)
+    print("显示图片,按任意键结束...")
+    cv2.waitKey(0)#防止图片一闪而过，等待键盘输入
+    cv2.destroyAllWindows()
+    c = input("是否需要保存图片?(y/n)")
+    if c == "y" or c == "Y":
+        name = input("请输入需要保存的文件名:")
+        cv2.imwrite("%s.jpg" %(name), img_svd, [int( cv2.IMWRITE_JPEG_QUALITY), 100])
