@@ -12,8 +12,10 @@ def image_svd_decompose(img):
     return Ur,Sr,Dr,Ug,Sg,Dg,Ub,Sb,Db
 
 #对图片单一色彩通道的U,S,D矩阵相乘，取S的第m到第n项，返回单色彩通道svd处理后的图片矩阵
-def USD(U, sigma, D, m, n):
-    S = np.zeros((U.shape[0], D.shape[1]))
+def USD(U, sigma, D, m = 0, n = 0):
+    if n == 0:
+        n = sigma.shape[0]
+    S = np.zeros((U.shape[1], D.shape[0]))
     for i in range(m, n):
         S[i,i] = sigma[i]
     U_S = np.matmul(U, S)
@@ -46,4 +48,4 @@ if __name__ == '__main__':
     c = input("是否需要保存图片?(y/n)")
     if c == "y" or c == "Y":
         name = input("请输入需要保存的文件名:")
-        cv2.imwrite("%s.jpg" %(name), img_svd, [int( cv2.IMWRITE_JPEG_QUALITY), 100])
+        cv2.imwrite("%s.jpg" %(name), img_svd, [int( cv2.IMWRITE_JPEG_QUALITY), 100])#以jpg格式最高质量保存图片
